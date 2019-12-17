@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import sys,os,time,stat,logging
+import uproot, pandas
 from optparse import OptionParser
 
 logging.basicConfig(level=logging.INFO)
@@ -41,9 +42,12 @@ def main():
         log.error("\tThe output path specified doesn't exists.\n\t\t\tPlease, use '-o <path>' to specify an existing output path.")
         sys.exit()
         
-    
+    # load input data
+    in_data = uproot.open(inppath+"/"+inpfile)["nominal"]
+    #in_data_df = in_data.pandas.df()
+        
 
-        # Start the main routine and log process time
+# Start the main routine and log process time
 if __name__ == "__main__":
     start = time.time()
     main()
