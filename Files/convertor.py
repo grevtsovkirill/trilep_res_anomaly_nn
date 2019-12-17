@@ -23,9 +23,14 @@ def main():
 		      dest="outPath",
 		      default="./",
 		      help="Path where the output file will be saved. [Default = ./].")
+    parser.add_option("-t", "--inpFileTree",
+		      dest="inpFileTree",
+		      default="nominal",
+		      help="Tree name. [Default = nominal].")
 
     (options, args)=parser.parse_args()
     inpfile = options.inpFile
+    inpfiletree = options.inpFileTree
     inppath = options.inpPath
     outpath = options.outPath
     
@@ -43,9 +48,10 @@ def main():
         sys.exit()
         
     # load input data
-    in_data = uproot.open(inppath+"/"+inpfile)["nominal"]
-    #in_data_df = in_data.pandas.df()
-        
+    in_data = uproot.open(inppath+"/"+inpfile)[inpfiletree]
+    #print(in_data.keys())
+    in_data_df = in_data.pandas.df(flatten=False)
+    print(in_data_df.head())
 
 # Start the main routine and log process time
 if __name__ == "__main__":
