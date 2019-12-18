@@ -42,12 +42,17 @@ def main():
 		      dest="inpFileTree",
 		      default="nominal",
 		      help="Tree name. [Default = nominal].")
+    parser.add_option("-d", "--outFormat",
+		      dest="outFormat",
+		      default="csv",
+		      help="Output format. [Default = csv].")
 
     (options, args)=parser.parse_args()
     inpfile = options.inpFile
     inpfiletree = options.inpFileTree
     inppath = options.inpPath
     outpath = options.outPath
+    format_choice = options.outFormat
     
     # Check that the input path exists
     if not os.path.exists(inppath):
@@ -59,10 +64,10 @@ def main():
         sys.exit()
         
     if not os.path.exists(outpath):
-        log.error("\tThe output path specified doesn't exists.\n\t\t\tPlease, use '-o <path>' to specify an existing output path.")
+        log.error("The output path specified doesn't exists.\n\t\t\tPlease, use '-o <path>' to specify an existing output path.")
         sys.exit()
         
-    outname=outpath+'/'+inpfile+'.h5'
+    outname=outpath+'/'+inpfile+'.'+format_choice 
     # load input data
     in_data = uproot.open(inppath+"/"+inpfile+".root")[inpfiletree]
     
@@ -73,7 +78,17 @@ def main():
     #print(np.array_equal(vector_br_list,vector_list))
     for i in vector_br_list:
         del in_data_df[i]
-    in_data_df.to_hdf(outname, key='df', mode='w')
+
+
+    if format_choice == 'csv':
+        in_data_df.to_csv(outname, sep=',')        
+    elif format_choice == 'h5':
+        in_data_df.to_hdf(outname, key='df', mode='w')
+    else:
+        log.error("Specify format")
+        sys.exit()
+        
+    
 
 # Start the main routine and log process time
 if __name__ == "__main__":
