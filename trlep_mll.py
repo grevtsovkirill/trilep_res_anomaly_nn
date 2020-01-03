@@ -65,7 +65,13 @@ def plot_stack_var(df_data,df_bkg,lab_list,var,GeV):
     plt.savefig("Plots/"+var+".png", transparent=True)
     plt.show()
 
-    
+
+#apply additional selections
+def apply_3l_Zveto_SF_cuts(df):
+    df1=df.loc[abs(df.lep_ID_0)==abs(df.lep_ID_1)]
+    df2=df1.loc[df1.best_Z_Mll>0]    
+    return df2
+
 def main():
     #load data 
     data=pandas.read_csv('Files/class_data.csv')
@@ -74,10 +80,13 @@ def main():
     labels_list=['ttZ']
     bkg_set=mc_load(labels_list)
 
+    data_sel=apply_3l_Zveto_SF_cuts(data)
+    bkg_set_sel=apply_3l_Zveto_SF_cuts(bkg_set)
+    
     scale_to_GeV=0.001
     var='Mll01'
 
-    plot_stack_var(data,bkg_set,labels_list,'Mll01',0.001)
+    plot_stack_var(data_sel,bkg_set_sel,labels_list,'Mll01',0.001)
     
 if __name__ == "__main__":
     start = time.time()
