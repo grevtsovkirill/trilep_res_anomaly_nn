@@ -66,7 +66,6 @@ def plot_stack_var(df_data,df_bkg,lab_list,var,GeV):
     plt.legend()
     plt.tight_layout()
     plt.savefig("Plots/"+var+".png", transparent=True)
-    #plt.show()
 
 def ovr_slot(df_d,df_b,var='Mll01',GeV=0.001,fig_size=(10, 5)):
     f, ax = plt.subplots(figsize=fig_size)
@@ -109,9 +108,10 @@ def main():
     ovr_slot(data_sel,bkg_set_sel)
     
     #prepare datasets for building the model:
-    #data_sel_trim = data_sel.drop(data_preparation.list_branch_to_remove(data_sel),axis=1)
-    #bkg_set_sel_trim = bkg_set_sel.drop(data_preparation.list_branch_to_remove(bkg_set_sel),axis=1)
+    data_sel_trim = data_sel.drop(data_preparation.list_branch_to_remove(data_sel),axis=1)
+    bkg_set_sel_trim = bkg_set_sel.drop(data_preparation.list_branch_to_remove(bkg_set_sel),axis=1)
 
+    print(len(data_sel_trim.columns),len(bkg_set_sel_trim.columns))
     
 if __name__ == "__main__":
     start = time.time()
