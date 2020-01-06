@@ -11,7 +11,9 @@ def apply_3l_Zveto_SF_cuts(df):
 def list_branch_to_remove(df,additional_vars=[]):
     syst_list=['UP','DOWN','CRB','scale','weight','SF','Eff',
                'forFit','HLT','tau','MV2c20','is1','is2','is3','is4',
-               'ghost','flvWtOrdr','pass']
+               'ghost','flvWtOrdr','pass','mc_channel_number',
+               'isBrems','isTruth','isQMisID','isExtConv','isConv',
+               'isIntConv','isISR']
     syst_list=syst_list+additional_vars
     matches_syst=[]
     features = list(df.columns.values)
