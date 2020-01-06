@@ -7,6 +7,8 @@
 # IPython
 ipython_config.py
 
+__pycache__
+
 # pyenv
 .python-version
 
