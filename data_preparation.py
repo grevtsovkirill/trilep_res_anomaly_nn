@@ -43,3 +43,13 @@ def unify_branches(df_1,df_2):
         print("WARNING: Something went wrong, double check the content")
 
     return df_1m,df_2m
+
+def model_input(df1,df2):
+    df1['ltype'] = 1
+    df2['ltype'] = 0    
+    X = pandas.concat([df1,df2], sort=True)
+    y = X['ltype']
+    return X,y
+
+
+                    

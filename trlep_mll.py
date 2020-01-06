@@ -121,8 +121,11 @@ def main():
 
     #check that both classes contains same information: number and type of branches
     data_class,bkg_class = data_preparation.unify_branches(data_sel_trim,bkg_set_sel_trim)
-    
 
+    #build data for the model:
+    X,y=data_preparation.model_input(data_class,bkg_class)
+    
+    
 if __name__ == "__main__":
     start = time.time()
     main()
