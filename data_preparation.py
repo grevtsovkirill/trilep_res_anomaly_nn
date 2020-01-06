@@ -13,7 +13,9 @@ def list_branch_to_remove(df,additional_vars=[]):
                'forFit','HLT','tau','MV2c20','is1','is2','is3','is4',
                'ghost','flvWtOrdr','pass','mc_channel_number',
                'isBrems','isTruth','isQMisID','isExtConv','isConv',
-               'isIntConv','isISR']
+               'isIntConv','isISR','isttGamma','isFake','isLepFromPhEvent',
+               'higgsDecayMode',
+               'lbn','EventNumber']
     syst_list=syst_list+additional_vars
     matches_syst=[]
     features = list(df.columns.values)
