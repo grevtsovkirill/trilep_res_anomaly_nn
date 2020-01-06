@@ -25,3 +25,21 @@ def list_branch_to_remove(df,additional_vars=[]):
             if j in x:
                 matches_syst.append(x.strip())
     return matches_syst
+
+def unify_branches(df_1,df_2):
+    s1 = set(df_1.columns)
+    list_diff12 = [x for x in df_2.columns if x not in s1]
+    df_2m = df_2.drop(list_diff12,axis=1)
+
+    s2 = set(df_2m.columns)
+    list_diff21 = [x for x in df_1.columns if x not in s2]
+    df_1m = df_1.drop(list_diff21,axis=1)
+    #df_1m = df_1
+        
+    #print(list_diff12,list_diff21)
+    if set(df_1m.columns)==set(df_2m.columns):
+        print("All good, content is the same in both classes\n total %s branches" %len(df_1m.columns))
+    else:
+        print("WARNING: Something went wrong, double check the content")
+
+    return df_1m,df_2m

@@ -22,6 +22,12 @@ def weight_df(df):
     return weights
 
 #load MC samples:
+def data_load():
+    df=pandas.read_csv('Files/class_data.csv')
+    df['t_w'] = 1
+    df['label'] = 'data'    
+    return df
+    
 def mc_load(labels_list):
     mc_list=[]
     for i in labels_list:
@@ -38,6 +44,10 @@ def mc_load(labels_list):
     mc_df = pandas.concat(mc_list,sort=False)
     return mc_df
 
+def get_data(labels_list):
+    data = data_load()
+    bkg = mc_load(labels_list)
+    return data,bkg
 
 def plot_stack_var(df_data,df_bkg,lab_list,var,GeV):
     stack_var=[]
@@ -90,11 +100,9 @@ def ovr_slot(df_d,df_b,var='Mll01',GeV=0.001,fig_size=(10, 5)):
 
 def main():
     #load data 
-    data=pandas.read_csv('Files/class_data.csv')
-    data['t_w']=1
     #labels_list=['ttZ','ttW','ttH','VV','fakes','Others']
     labels_list=['ttZ']
-    bkg_set=mc_load(labels_list)
+    data, bkg_set=get_data(labels_list)
 
     #apply final selections
     data_sel=data_preparation.apply_3l_Zveto_SF_cuts(data)
@@ -111,8 +119,10 @@ def main():
     data_sel_trim = data_sel.drop(data_preparation.list_branch_to_remove(data_sel),axis=1)
     bkg_set_sel_trim = bkg_set_sel.drop(data_preparation.list_branch_to_remove(bkg_set_sel),axis=1)
 
-    print(len(data_sel_trim.columns),len(bkg_set_sel_trim.columns))
+    #check that both classes contains same information: number and type of branches
+    data_class,bkg_class = data_preparation.unify_branches(data_sel_trim,bkg_set_sel_trim)
     
+
 if __name__ == "__main__":
     start = time.time()
     main()
