@@ -8,6 +8,13 @@ import data_preparation
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
 
+scale_to_GeV=0.001
+binning = {
+    "DRll01": np.linspace(-2, 6, 24),
+    "max_eta": np.linspace(0, 2.5, 26),
+    "Mll01": np.linspace(0, 200, 25)
+}
+
 def weight_df(df):    
     df['lumiscale'] = df.RunYear.apply(
                lambda x: (36074.6 if (x == 2015 or x == 2016) else 43813.7))
@@ -31,11 +38,6 @@ def mc_load(labels_list):
     mc_df = pandas.concat(mc_list,sort=False)
     return mc_df
 
-binning = {
-    "DRll01": np.linspace(-2, 6, 24),
-    "max_eta": np.linspace(0, 2.5, 26),
-    "Mll01": np.linspace(0, 200, 25)
-}
 
 def plot_stack_var(df_data,df_bkg,lab_list,var,GeV):
     stack_var=[]
@@ -64,8 +66,27 @@ def plot_stack_var(df_data,df_bkg,lab_list,var,GeV):
     plt.legend()
     plt.tight_layout()
     plt.savefig("Plots/"+var+".png", transparent=True)
-    plt.show()
+    #plt.show()
 
+def ovr_slot(df_d,df_b,var='Mll01',GeV=0.001,fig_size=(10, 5)):
+    f, ax = plt.subplots(figsize=fig_size)
+    ax.hist(df_d[var]*GeV, binning[var], histtype='step',
+         label=["data"],
+         stacked=False, 
+         fill=False, 
+         linewidth=2, alpha=0.8)
+    ax.hist(df_b[var]*GeV, binning[var], histtype='step',
+         label=["bkgs"],
+         weights=df_b.t_w,
+         stacked=False, 
+         fill=False, 
+         linewidth=2, alpha=0.8)
+    ax.set_xlabel(var,fontsize=12)
+    ax.set_ylabel('# Events',fontsize=12)    
+    ax.legend()   
+    f.savefig("Plots/class_"+var+".png", transparent=True)
+
+    
 
 
 def main():
@@ -76,13 +97,21 @@ def main():
     labels_list=['ttZ']
     bkg_set=mc_load(labels_list)
 
+    #apply final selections
     data_sel=data_preparation.apply_3l_Zveto_SF_cuts(data)
-    #bkg_set_sel=dataprep.apply_3l_Zveto_SF_cuts(bkg_set)
+    bkg_set_sel=data_preparation.apply_3l_Zveto_SF_cuts(bkg_set)
     
-    scale_to_GeV=0.001
     var='Mll01'
+    #test stack plot of whole contributions 
+    plot_stack_var(data_sel,bkg_set_sel,labels_list,'Mll01',0.001)
 
-    #plot_stack_var(data,bkg_set,labels_list,'Mll01',0.001)
+    #plot of two classes to find the key feature responsible for the difference
+    ovr_slot(data_sel,bkg_set_sel)
+    
+    #prepare datasets for building the model:
+    #data_sel_trim = data_sel.drop(data_preparation.list_branch_to_remove(data_sel),axis=1)
+    #bkg_set_sel_trim = bkg_set_sel.drop(data_preparation.list_branch_to_remove(bkg_set_sel),axis=1)
+
     
 if __name__ == "__main__":
     start = time.time()
