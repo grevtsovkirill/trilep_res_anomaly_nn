@@ -55,7 +55,7 @@ def ovr_slot(df_d,df_b,var='Mll01',GeV=scale_to_GeV,fig_size=(10, 5)):
     ax.legend()   
     f.savefig("Plots/class_"+var+".png", transparent=True)
 
-def feature_rank(model,df,top_vars=20):
+def feature_rank(model,df,name,top_vars=20):
     tree_importance_sorted_idx = np.flip(np.argsort(model.feature_importances_))
     tree_indices = np.arange(0, len(model.feature_importances_)) + 0.5
 
@@ -66,9 +66,9 @@ def feature_rank(model,df,top_vars=20):
     ax.set_yticks(tree_indices)
     ax.set_ylim((0,top_vars))
     f.tight_layout()
-    f.savefig("Plots/rank20RF.png", transparent=True)
+    f.savefig("Plots/rank20"+name+".png", transparent=True)
 
     rank = pandas.DataFrame(list(zip(df.columns[tree_importance_sorted_idx][:top_vars],
                                model.feature_importances_[tree_importance_sorted_idx][:top_vars])),
                       columns =['var', 'score'])
-    rank.to_csv('Plots/rank20R.csv')
+    rank.to_csv("Plots/rank20"+name+".csv")
