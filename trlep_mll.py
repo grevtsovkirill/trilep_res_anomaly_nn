@@ -49,9 +49,10 @@ def main():
     X,y=data_preparation.model_input(data_class,bkg_class)
     print(len(X.columns))
 
+    Xs = StandardScaler().fit_transform(X)
     # RF
     clf = RandomForestClassifier(n_estimators=100, random_state=42)
-    model = clf.fit(X, y)
+    model = clf.fit(Xs, y)
 
     plot_helper.feature_rank(model,X)
 
