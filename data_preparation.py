@@ -44,11 +44,25 @@ def unify_branches(df_1,df_2):
 
     return df_1m,df_2m
 
+def test_float32_infs(df):
+    out_boundaries = []
+    for i in df.columns:
+        val = df[i].sum()
+        if float(val)>1e+30:
+            print(i,val)
+            out_boundaries.append(i)
+    if not out_boundaries:
+        df.drop(out_boundaries,axis=1, inplace=True)
+
+    return df
+            
 def model_input(df1,df2):
     df1['ltype'] = 1
     df2['ltype'] = 0    
     X = pandas.concat([df1,df2], sort=True)
     y = X['ltype']
+    X.drop(['ltype','label'],axis=1, inplace=True)
+    X=test_float32_infs(X)
     return X,y
 
 
