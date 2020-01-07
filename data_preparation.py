@@ -11,10 +11,10 @@ def apply_3l_Zveto_SF_cuts(df):
 def list_branch_to_remove(df,additional_vars=[]):
     syst_list=['UP','DOWN','CRB','scale','weight','SF','Eff',
                'forFit','HLT','tau','MV2c20','is1','is2','is3','is4',
-               'ghost','flvWtOrdr','pass','mc_channel_number',
+               'ghost','flvWtOrdr','pass','mc_channel_number','truth',
                'isBrems','isTruth','isQMisID','isExtConv','isConv',
                'isIntConv','isISR','ist','isFake','isLepFromPhEvent',
-               'higgsDecayMode','isPrompt','top_','isW','MEphoton','jet_flavor',
+               'isPrompt','top_','isW','MEphoton','jet_flavor',
                'pileupEventWeight_090','JVT_EventWeight','SherpaNJetWeight','mcWeightOrg','mcEventWeights',
                'isPrompt','isV','higgs','Clas','bcid','lbn','EventNumber','entry','RunNumber']
     syst_list=syst_list+additional_vars
@@ -51,7 +51,7 @@ def test_float32_infs(df):
         if float(val)>1e+30:
             print(i,val)
             out_boundaries.append(i)
-    if not out_boundaries:
+    if out_boundaries:
         df.drop(out_boundaries,axis=1, inplace=True)
 
     return df

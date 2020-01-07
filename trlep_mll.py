@@ -124,7 +124,7 @@ def main():
 
     #build data for the model:
     X,y=data_preparation.model_input(data_class,bkg_class)
-    
+    print(len(X.columns))
     
 if __name__ == "__main__":
     start = time.time()
