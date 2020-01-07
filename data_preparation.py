@@ -1,6 +1,36 @@
 import pandas
 import numpy as np
 
+
+def weight_df(df):    
+    df['lumiscale'] = df.RunYear.apply(
+               lambda x: (36074.6 if (x == 2015 or x == 2016) else 43813.7))
+    weights = df.lumiscale*df.pileupEventWeight_090*df.scale_nom*df.JVT_EventWeight*df.MV2c10_70_EventWeight*df.lepSFObjTight*df.lepSFTrigTight*df.SherpaNJetWeight
+    return weights
+
+def data_load():
+    df=pandas.read_csv('Files/class_data.csv')
+    df['t_w'] = 1
+    df['label'] = 'data'    
+    return df
+    
+def mc_load(labels_list):
+    mc_list=[]
+    for i in labels_list:
+        name='Files/class_mc_'+i+'.csv'
+        df=pandas.read_csv(name)
+        df['label'] = i
+        if i == 'fakes':
+            df['t_w'] = 1
+        else:
+            df['t_w'] = weight_df(df)
+        
+        mc_list.append(df)
+        
+    mc_df = pandas.concat(mc_list,sort=False)
+    return mc_df
+
+
 #apply additional selections
 def apply_3l_Zveto_SF_cuts(df):
     df1=df.loc[abs(df.lep_ID_0)==abs(df.lep_ID_1)]
