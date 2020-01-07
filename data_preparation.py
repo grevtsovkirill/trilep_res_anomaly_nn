@@ -45,7 +45,7 @@ def list_branch_to_remove(df,additional_vars=[]):
                'isBrems','isTruth','isQMisID','isExtConv','isConv',
                'isIntConv','isISR','ist','isFake','isLepFromPhEvent',
                'isPrompt','top_','isW','MEphoton','jet_flavor',
-               'pileupEventWeight_090','JVT_EventWeight','SherpaNJetWeight','mcWeightOrg','mcEventWeights',
+               'pileupEventWeight_090','JVT_EventWeight','SherpaNJetWeight','mcWeightOrg','EventWeight',
                'isPrompt','isV','higgs','Clas','bcid','lbn','EventNumber','entry','RunNumber']
     syst_list=syst_list+additional_vars
     matches_syst=[]
@@ -74,25 +74,29 @@ def unify_branches(df_1,df_2):
 
     return df_1m,df_2m
 
-def test_float32_infs(df):
+def test_nans_float32_infs(df):
     out_boundaries = []
     for i in df.columns:
         val = df[i].sum()
         if float(val)>1e+30:
-            print(i,val)
+            print("   --- inf or >float32:",i,val)
+            out_boundaries.append(i)
+        elif df[i].isnull().any():
+            print("   --- contain nans:", i)
             out_boundaries.append(i)
     if out_boundaries:
         df.drop(out_boundaries,axis=1, inplace=True)
 
     return df
-            
+
+    
 def model_input(df1,df2):
     df1['ltype'] = 1
     df2['ltype'] = 0    
     X = pandas.concat([df1,df2], sort=True)
     y = X['ltype']
-    X.drop(['ltype','label'],axis=1, inplace=True)
-    X=test_float32_infs(X)
+    X.drop(['ltype','label','t_w'],axis=1, inplace=True)
+    X=test_nans_float32_infs(X)
     return X,y
 
 
