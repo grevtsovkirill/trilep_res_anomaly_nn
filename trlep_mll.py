@@ -5,9 +5,11 @@ import data_preparation
 import plot_helper
 import matplotlib.pyplot as plt
 
-from sklearn.ensemble import RandomForestClassifier
 from sklearn import preprocessing
 from sklearn.preprocessing import StandardScaler
+from sklearn.neural_network import MLPClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
@@ -49,12 +51,20 @@ def main():
     X,y=data_preparation.model_input(data_class,bkg_class)
     print(len(X.columns))
 
-    Xs = StandardScaler().fit_transform(X)
-    # RF
-    clf = RandomForestClassifier(n_estimators=100, random_state=42)
-    model = clf.fit(Xs, y)
+    #
+    names = ["DecisionTree", "RandomForest", "AdaBoost"]
+    classifiers = [
+        DecisionTreeClassifier(max_depth=5),
+        RandomForestClassifier(max_depth=5, n_estimators=100),
+        AdaBoostClassifier()]
 
-    plot_helper.feature_rank(model,X)
+    #Xs = StandardScaler().fit_transform(X)
+    # iterate over classifiers
+    for name, clf in zip(names, classifiers):
+        clf.fit(X, y)
+        plot_helper.feature_rank(clf,X,name)
+
+    
 
     
 if __name__ == "__main__":
