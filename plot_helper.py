@@ -9,7 +9,7 @@ binning = {
 }
 
 
-def plot_stack_var(df_data,df_bkg,lab_list,var,GeV):
+def plot_stack_var(df_data,df_bkg,lab_list,var,GeV=scale_to_GeV):
     stack_var=[]
     stack_var_w=[]
     stack_var_leg=[]    
@@ -37,7 +37,7 @@ def plot_stack_var(df_data,df_bkg,lab_list,var,GeV):
     plt.tight_layout()
     plt.savefig("Plots/"+var+".png", transparent=True)
 
-def ovr_slot(df_d,df_b,var='Mll01',GeV=0.001,fig_size=(10, 5)):
+def ovr_slot(df_d,df_b,var='Mll01',GeV=scale_to_GeV,fig_size=(10, 5)):
     f, ax = plt.subplots(figsize=fig_size)
     ax.hist(df_d[var]*GeV, binning[var], histtype='step',
          label=["data"],
