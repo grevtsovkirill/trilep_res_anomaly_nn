@@ -55,3 +55,16 @@ def ovr_slot(df_d,df_b,var='Mll01',GeV=scale_to_GeV,fig_size=(10, 5)):
     ax.legend()   
     f.savefig("Plots/class_"+var+".png", transparent=True)
 
+def feature_rank(model,df):
+    tree_importance_sorted_idx = np.argsort(model.feature_importances_)
+    tree_indices = np.arange(0, len(model.feature_importances_)) + 0.5
+    f, ax = plt.subplots(figsize=(12, 8))
+    ax.barh(tree_indices,
+            model.feature_importances_[tree_importance_sorted_idx], height=0.7)
+    ax.set_yticklabels(df.columns[tree_importance_sorted_idx])
+    ax.set_yticks(tree_indices)
+    ax.set_ylim((len(model.feature_importances_)-20,len(model.feature_importances_)))
+    f.tight_layout()
+    f.savefig("Plots/rank20RF.png", transparent=True)
+    #plt.show()
+
