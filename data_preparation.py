@@ -89,7 +89,18 @@ def test_nans_float32_infs(df):
 
     return df
 
-    
+def only_unique(df):
+    list_same_val_branch = []
+    for j in df.columns:
+        i0=df[j].sample(1,random_state=0).item()
+        if all(i ==i0 for i in df[j]):
+            list_same_val_branch.append(j)
+
+    if list_same_val_branch:
+        df.drop(list_same_val_branch,axis=1, inplace=True)
+
+    return df
+            
 def model_input(df1,df2):
     df1['ltype'] = 1
     df2['ltype'] = 0    
@@ -97,6 +108,7 @@ def model_input(df1,df2):
     y = X['ltype']
     X.drop(['ltype','label','t_w'],axis=1, inplace=True)
     X=test_nans_float32_infs(X)
+    X=only_unique(X)
     return X,y
 
 
