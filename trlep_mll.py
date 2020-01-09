@@ -50,15 +50,21 @@ def main():
     #build data for the model:
     X,y=data_preparation.model_input(data_class,bkg_class)
     print(len(X.columns))
-
-    #
+    '''
+    intentionaly keep all data (without split to train and test)
+    as the goal to spot key feature in experimental data (label=0)
+    leading to issue with the reconstruction process
+    '''
+    
+    #Set of Models
     names = ["DecisionTree", "RandomForest", "AdaBoost"]
     classifiers = [
         DecisionTreeClassifier(max_depth=5),
         RandomForestClassifier(max_depth=5, n_estimators=100),
         AdaBoostClassifier()]
 
-    #Xs = StandardScaler().fit_transform(X)
+    
+    Xs = StandardScaler().fit_transform(X)
     # iterate over classifiers
     for name, clf in zip(names, classifiers):
         clf.fit(X, y)
