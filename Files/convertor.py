@@ -72,7 +72,7 @@ def main():
     in_data = uproot.open(inppath+"/"+inpfile+".root")[inpfiletree]
     
     in_data_df = in_data.pandas.df(flatten=False)
-    del in_data_df['lep_truthParentPdgId_2_new']
+    #del in_data_df['lep_truthParentPdgId_2_new']
     vector_br_list=find_vector_branches(in_data_df)
     #vector_list=['jet_flavor_truth_label_ghost','jet_flavor_weight_MV2c10','jet_pT','jet_eta','lepton_PromptLeptonIso_TagWeight','lepton_ChargeIDBDTTight','scale_weights','mcEventWeights','total_weights','electron_ambiguityType','electron_PromptLeptonIso_TagWeight','electron_PromptLeptonVeto_TagWeight','muon_PromptLeptonIso_TagWeight','muon_PromptLeptonVeto_TagWeight']
     #print(np.array_equal(vector_br_list,vector_list))
